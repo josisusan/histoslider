@@ -147,7 +147,7 @@
 	            padding: 20,
 	            width: 400,
 	            height: 200,
-	            bucketSize: 3,
+	            bucketSize: 6,
 	            selectionColor: 'purple',
 	            data: data,
 	            onChange: this.histogramChanged.bind(this)
@@ -158,7 +158,8 @@
 	            width: 400,
 	            height: 200,
 	            selectionColor: 'orange',
-	            bucketSize: 6,
+	            histogramPadding: 10,
+	            bucketSize: 4,
 	            data: data,
 	            onChange: this.histogramChanged.bind(this)
 	          }),
@@ -167,8 +168,9 @@
 	            padding: 15,
 	            width: 400,
 	            height: 200,
+	            histogramPadding: 0,
 	            selectionColor: 'steelblue',
-	            bucketSize: 2.5,
+	            bucketSize: 2,
 	            data: data,
 	            onChange: this.histogramChanged.bind(this)
 	          })
@@ -19792,8 +19794,9 @@
 	    key: 'render',
 	    value: function render() {
 	      var extent = _d3Arrays2['default'].extent(this.props.data);
-	      var start = this.props.start || extent[0];
-	      var end = this.props.end || extent[1] + this.props.bucketSize;
+	      var start = this.props.start >= 0 ? this.props.start : Math.floor(extent[0] / this.props.bucketSize) * this.props.bucketSize;
+	      var end = this.props.end >= 0 ? this.props.end : Math.ceil(extent[1] / this.props.bucketSize) * this.props.bucketSize;
+
 	      var innerWidth = this.props.width - this.props.padding * 2;
 	      var scale = _d3Scale2['default'].linear().domain([start, end]).range([this.props.padding, innerWidth + this.props.padding]).clamp(true);
 	      var selection = this.props.selection ? this.props.selection : [start, end];
@@ -22880,8 +22883,8 @@
 	          end: s + bucketSize,
 	          values: values
 	        });
-
 	        max = values.length > max ? values.length : max;
+
 	        s += bucketSize;
 	      }
 
@@ -22938,21 +22941,21 @@
 
 	                return _react2['default'].createElement(
 	                  'g',
-	                  { key: i, transform: 'translate(' + (i * bucketWidth + _this.props.histogramPadding / 2) + ', 0)' },
+	                  { key: i, transform: 'translate(' + i * bucketWidth + ', 0)' },
 	                  _react2['default'].createElement('rect', {
 	                    fill: '#f1f1f1',
 	                    width: bucketWidth - _this.props.histogramPadding,
 	                    height: bucket.values.length / max * innerHeight,
-	                    x: 0
+	                    x: _this.props.histogramPadding / 2
 	                  }),
 	                  _react2['default'].createElement('rect', {
 	                    fill: _this.props.selectionColor,
 	                    onClick: _this.selectBucket.bind(_this, bucket),
 	                    onDoubleClick: _this.props.reset.bind(_this),
-	                    style: { opacity: opacity },
+	                    style: { opacity: opacity, cursor: 'pointer' },
 	                    width: bucketWidth - _this.props.histogramPadding,
 	                    height: bucket.values.length / max * innerHeight,
-	                    x: 0
+	                    x: _this.props.histogramPadding / 2
 	                  })
 	                );
 	              })
@@ -23021,8 +23024,8 @@
 
 	var sliderStyle = {
 	  display: 'block',
-	  marginTop: '-10px',
-	  paddingBottom: '10px'
+	  marginTop: '-8px',
+	  paddingBottom: '8px'
 	};
 
 	var handleStyle = {
@@ -23125,13 +23128,6 @@
 	          onMouseDown: this.dragFromSVG.bind(this),
 	          onDoubleClick: this.props.reset
 	        },
-	        _react2['default'].createElement('rect', {
-	          height: 8,
-	          fill: '#fafafa',
-	          x: this.props.scale(this.props.selectionSorted[0]),
-	          y: 8,
-	          width: selectionWidth
-	        }),
 	        _react2['default'].createElement('rect', {
 	          height: 2,
 	          fill: this.props.selectionColor,
