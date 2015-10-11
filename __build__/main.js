@@ -132,6 +132,45 @@
 	          )
 	        ),
 	        _react2['default'].createElement(
+	          'h3',
+	          null,
+	          'Show on Drag'
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'demo-wrapper' },
+	          _react2['default'].createElement(_libComponentsHistoslider2['default'], {
+	            selection: this.state.selection,
+	            padding: 25,
+	            width: 400,
+	            height: 200,
+	            showOnDrag: true,
+	            histogramPadding: 4,
+	            selectionColor: 'lightgreen',
+	            bucketSize: 2,
+	            data: data,
+	            onChange: this.histogramChanged.bind(this)
+	          }),
+	          _react2['default'].createElement(_libComponentsHistoslider2['default'], {
+	            selection: this.state.selection,
+	            padding: 25,
+	            width: 400,
+	            height: 200,
+	            showOnDrag: true,
+	            histogramPadding: 10,
+	            selectionColor: '#e74c3c',
+	            bucketSize: 2,
+	            barBorderRadius: 3,
+	            data: data,
+	            onChange: this.histogramChanged.bind(this)
+	          })
+	        ),
+	        _react2['default'].createElement(
+	          'h3',
+	          null,
+	          'Visible'
+	        ),
+	        _react2['default'].createElement(
 	          'div',
 	          { className: 'demo-wrapper' },
 	          _react2['default'].createElement(_libComponentsHistoslider2['default'], {
@@ -168,7 +207,7 @@
 	            padding: 15,
 	            width: 400,
 	            height: 200,
-	            histogramPadding: 0,
+	            histogramPadding: 0.5,
 	            selectionColor: 'steelblue',
 	            bucketSize: 2,
 	            data: data,
@@ -19773,7 +19812,8 @@
 
 	var histosliderStyle = {
 	  position: 'relative',
-	  backgroundColor: '#fafafa'
+	  backgroundColor: '#fafafa',
+	  border: '1px solid #eaeaea'
 	};
 
 	var Histoslider = (function (_Component) {
@@ -19782,10 +19822,18 @@
 	  function Histoslider() {
 	    _classCallCheck(this, Histoslider);
 
-	    _get(Object.getPrototypeOf(Histoslider.prototype), 'constructor', this).apply(this, arguments);
+	    _get(Object.getPrototypeOf(Histoslider.prototype), 'constructor', this).call(this);
+	    this.state = {
+	      dragging: false
+	    };
 	  }
 
 	  _createClass(Histoslider, [{
+	    key: 'dragChange',
+	    value: function dragChange(dragging) {
+	      this.setState({ dragging: dragging });
+	    }
+	  }, {
 	    key: 'reset',
 	    value: function reset() {
 	      this.props.onChange(null);
@@ -19805,9 +19853,17 @@
 	      // TODO: selection layer
 	      return _react2['default'].createElement(
 	        'div',
-	        { style: Object.assign(histosliderStyle, { width: this.props.width }), className: 'Histoslider Histoslider-wrapper' },
-	        _react2['default'].createElement(_Histogram2['default'], Object.assign({}, this.props, { start: start, end: end, reset: this.reset.bind(this), extent: extent, selection: selectionSorted, innerWidth: innerWidth, scale: scale, height: this.props.height - 40 })),
-	        _react2['default'].createElement(_Slider2['default'], Object.assign({}, this.props, { start: start, end: end, reset: this.reset.bind(this), extent: extent, selection: selection, selectionSorted: selectionSorted, scale: scale, innerWidth: innerWidth, height: 50 }))
+	        { style: Object.assign(histosliderStyle, { width: this.props.width, paddingTop: this.props.padding }), className: 'Histoslider Histoslider-wrapper' },
+	        !this.props.showOnDrag || this.state.dragging ? _react2['default'].createElement(_Histogram2['default'], Object.assign({}, this.props, {
+	          start: start,
+	          end: end,
+	          reset: this.reset.bind(this),
+	          extent: extent, selection: selectionSorted,
+	          innerWidth: innerWidth,
+	          scale: scale,
+	          height: this.props.height - 40
+	        })) : null,
+	        _react2['default'].createElement(_Slider2['default'], Object.assign({}, this.props, { start: start, end: end, dragChange: this.dragChange.bind(this), reset: this.reset.bind(this), extent: extent, selection: selection, selectionSorted: selectionSorted, scale: scale, innerWidth: innerWidth, height: 50 }))
 	      );
 	    }
 	  }]);
@@ -19830,18 +19886,20 @@
 	  selection: _react.PropTypes.arrayOf(_react.PropTypes.number),
 	  histogramHeight: _react.PropTypes.number,
 	  histogramPadding: _react.PropTypes.number,
-	  histogramVisible: _react.PropTypes.bool,
-	  style: _react.PropTypes.object
+	  showOnDrag: _react.PropTypes.bool,
+	  style: _react.PropTypes.object,
+	  barBorderRadius: _react.PropTypes.number
 	};
 
 	Histoslider.defaultProps = {
 	  bucketSize: 1,
 	  selectionColor: '#2ecc71',
-	  histogramVisible: true,
+	  showOnDrag: false,
 	  histogramPadding: 4,
 	  padding: 20,
 	  width: 400,
 	  height: 200,
+	  barBorderRadius: 0,
 	  style: {
 	    border: '1px solid red'
 	  }
@@ -22908,12 +22966,14 @@
 	      var bucketWidth = this.props.innerWidth / buckets.length;
 	      var selection = this.props.selection;
 
+	      var style = this.props.showOnDrag ? { position: 'absolute', left: '-1px', right: '-1px', backgroundColor: '#fafafa', border: '1px solid #eaeaea', borderBottom: 'none', bottom: 'calc(100% - ' + this.props.padding + 'px)' } : {};
+
 	      return _react2['default'].createElement(
 	        'div',
 	        null,
 	        _react2['default'].createElement(
 	          'svg',
-	          { style: histogramStyle, width: this.props.width, height: this.props.height },
+	          { style: Object.assign({}, style, histogramStyle), width: this.props.width, height: this.props.height },
 	          _react2['default'].createElement(
 	            'g',
 	            { transform: 'translate(' + this.props.padding + ',' + this.props.height + ')' },
@@ -22946,6 +23006,8 @@
 	                    fill: '#f1f1f1',
 	                    width: bucketWidth - _this.props.histogramPadding,
 	                    height: bucket.values.length / max * innerHeight,
+	                    rx: _this.props.barBorderRadius,
+	                    ry: _this.props.barBorderRadius,
 	                    x: _this.props.histogramPadding / 2
 	                  }),
 	                  _react2['default'].createElement('rect', {
@@ -22955,6 +23017,8 @@
 	                    style: { opacity: opacity, cursor: 'pointer' },
 	                    width: bucketWidth - _this.props.histogramPadding,
 	                    height: bucket.values.length / max * innerHeight,
+	                    rx: _this.props.barBorderRadius,
+	                    ry: _this.props.barBorderRadius,
 	                    x: _this.props.histogramPadding / 2
 	                  })
 	                );
@@ -22983,11 +23047,14 @@
 	  padding: _react.PropTypes.number,
 	  selectionColor: _react.PropTypes.string,
 	  histogramPadding: _react.PropTypes.number,
+	  showOnDrag: _react.PropTypes.bool,
 	  reset: _react.PropTypes.func,
-	  onChange: _react.PropTypes.func
+	  onChange: _react.PropTypes.func,
+	  barBorderRadius: _react.PropTypes.number
 	};
 
 	Histogram.defaultProps = {
+	  barBorderRadius: 0,
 	  histogramPadding: 1
 	};
 	module.exports = exports['default'];
@@ -23024,8 +23091,8 @@
 
 	var sliderStyle = {
 	  display: 'block',
-	  marginTop: '-8px',
-	  paddingBottom: '8px'
+	  paddingBottom: '8px',
+	  zIndex: '2'
 	};
 
 	var handleStyle = {
@@ -23063,25 +23130,35 @@
 	  _createClass(Slider, [{
 	    key: 'dragStart',
 	    value: function dragStart(index, e) {
+	      var _this = this;
+
 	      e.stopPropagation();
 	      if (!this.state.dragging) {
 	        this.setState({
 	          dragging: true,
 	          dragIndex: index
+	        }, function () {
+	          _this.props.dragChange(true);
 	        });
 	      }
 	    }
 	  }, {
 	    key: 'dragEnd',
 	    value: function dragEnd(e) {
+	      var _this2 = this;
+
 	      e.stopPropagation();
 	      this.setState({
 	        dragging: false
+	      }, function () {
+	        _this2.props.dragChange(false);
 	      });
 	    }
 	  }, {
 	    key: 'dragFromSVG',
 	    value: function dragFromSVG(e) {
+	      var _this3 = this;
+
 	      if (!this.state.dragging) {
 	        var selection = [].concat(_toConsumableArray(this.props.selection));
 	        var selected = this.props.scale.invert(e.nativeEvent.layerX);
@@ -23099,6 +23176,8 @@
 	        this.setState({
 	          dragging: true,
 	          dragIndex: dragIndex
+	        }, function () {
+	          _this3.props.dragChange(true);
 	        });
 	      }
 	    }
@@ -23114,7 +23193,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this = this;
+	      var _this4 = this;
 
 	      var selection = this.props.selection;
 	      var selectionWidth = Math.abs(this.props.scale(selection[1]) - this.props.scale(selection[0]));
@@ -23129,16 +23208,23 @@
 	          onDoubleClick: this.props.reset
 	        },
 	        _react2['default'].createElement('rect', {
-	          height: 2,
+	          height: 4,
+	          fill: '#f1f1f1',
+	          x: this.props.padding,
+	          y: 10,
+	          width: this.props.innerWidth
+	        }),
+	        _react2['default'].createElement('rect', {
+	          height: 4,
 	          fill: this.props.selectionColor,
 	          x: this.props.scale(this.props.selectionSorted[0]),
-	          y: 11,
+	          y: 10,
 	          width: selectionWidth
 	        }),
 	        this.props.selection.map(function (m, i) {
 	          return _react2['default'].createElement(
 	            'g',
-	            { transform: 'translate(' + _this.props.scale(m) + ', 0)', key: i },
+	            { transform: 'translate(' + _this4.props.scale(m) + ', 0)', key: i },
 	            _react2['default'].createElement('circle', {
 	              style: handleStyle,
 	              r: 10,
@@ -23149,7 +23235,7 @@
 	            }),
 	            _react2['default'].createElement('circle', {
 	              style: handleStyle,
-	              onMouseDown: _this.dragStart.bind(_this, i),
+	              onMouseDown: _this4.dragStart.bind(_this4, i),
 	              r: 9,
 	              cx: 0,
 	              cy: 12,
@@ -23187,12 +23273,14 @@
 	  end: _react.PropTypes.number,
 	  height: _react.PropTypes.number,
 	  width: _react.PropTypes.number,
+	  innerWidth: _react.PropTypes.number,
 	  padding: _react.PropTypes.number,
 	  bucketSize: _react.PropTypes.number,
 	  selectionColor: _react.PropTypes.string,
 	  histogramPadding: _react.PropTypes.number,
 	  scale: _react.PropTypes.func,
 	  reset: _react.PropTypes.func,
+	  dragChange: _react.PropTypes.func,
 	  onChange: _react.PropTypes.func
 	};
 	module.exports = exports['default'];
