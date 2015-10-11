@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import Histoslider from '../lib/components/Histoslider'
 
-import arrays from 'd3-arrays'
-
 const main = document.getElementById('main')
 
 class App extends Component {
@@ -38,16 +36,13 @@ class App extends Component {
     return (
       <div>
         <div style={{ margin: '0 0 1rem 0' }}>
-          <p>
-            <b>Selection</b>
-          </p>
-          <p>{ this.state.selection ? JSON.stringify(this.state.selection) : 'None' }</p>
+          <p><b>Selection</b> { this.state.selection ? <code>{JSON.stringify(this.state.selection)}</code> : 'None' }</p>
         </div>
         <div className='demo-wrapper'>
           <Histoslider
             selection={this.state.selection}
             padding={20}
-            width={500}
+            width={400}
             height={200}
             data={data}
             onChange={this.histogramChanged.bind(this)}
@@ -55,7 +50,7 @@ class App extends Component {
           <Histoslider
             selection={this.state.selection}
             padding={20}
-            width={500}
+            width={400}
             height={200}
             bucketSize={3}
             selectionColor='purple'
@@ -65,7 +60,7 @@ class App extends Component {
           <Histoslider
             selection={this.state.selection}
             padding={20}
-            width={500}
+            width={400}
             height={200}
             selectionColor='orange'
             bucketSize={6}
@@ -75,7 +70,7 @@ class App extends Component {
           <Histoslider
             selection={this.state.selection}
             padding={15}
-            width={500}
+            width={400}
             height={200}
             selectionColor='steelblue'
             bucketSize={2.5}

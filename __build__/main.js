@@ -68,10 +68,6 @@
 
 	var _libComponentsHistoslider2 = _interopRequireDefault(_libComponentsHistoslider);
 
-	var _d3Arrays = __webpack_require__(159);
-
-	var _d3Arrays2 = _interopRequireDefault(_d3Arrays);
-
 	var main = document.getElementById('main');
 
 	var App = (function (_Component) {
@@ -126,12 +122,13 @@
 	              'b',
 	              null,
 	              'Selection'
-	            )
-	          ),
-	          _react2['default'].createElement(
-	            'p',
-	            null,
-	            this.state.selection ? JSON.stringify(this.state.selection) : 'None'
+	            ),
+	            ' ',
+	            this.state.selection ? _react2['default'].createElement(
+	              'code',
+	              null,
+	              JSON.stringify(this.state.selection)
+	            ) : 'None'
 	          )
 	        ),
 	        _react2['default'].createElement(
@@ -140,7 +137,7 @@
 	          _react2['default'].createElement(_libComponentsHistoslider2['default'], {
 	            selection: this.state.selection,
 	            padding: 20,
-	            width: 500,
+	            width: 400,
 	            height: 200,
 	            data: data,
 	            onChange: this.histogramChanged.bind(this)
@@ -148,7 +145,7 @@
 	          _react2['default'].createElement(_libComponentsHistoslider2['default'], {
 	            selection: this.state.selection,
 	            padding: 20,
-	            width: 500,
+	            width: 400,
 	            height: 200,
 	            bucketSize: 3,
 	            selectionColor: 'purple',
@@ -158,7 +155,7 @@
 	          _react2['default'].createElement(_libComponentsHistoslider2['default'], {
 	            selection: this.state.selection,
 	            padding: 20,
-	            width: 500,
+	            width: 400,
 	            height: 200,
 	            selectionColor: 'orange',
 	            bucketSize: 6,
@@ -168,7 +165,7 @@
 	          _react2['default'].createElement(_libComponentsHistoslider2['default'], {
 	            selection: this.state.selection,
 	            padding: 15,
-	            width: 500,
+	            width: 400,
 	            height: 200,
 	            selectionColor: 'steelblue',
 	            bucketSize: 2.5,
@@ -19826,6 +19823,7 @@
 	  bucketSize: _react.PropTypes.number,
 	  width: _react.PropTypes.number,
 	  height: _react.PropTypes.number,
+	  padding: _react.PropTypes.number,
 	  selection: _react.PropTypes.arrayOf(_react.PropTypes.number),
 	  histogramHeight: _react.PropTypes.number,
 	  histogramPadding: _react.PropTypes.number,
@@ -19838,6 +19836,7 @@
 	  selectionColor: '#2ecc71',
 	  histogramVisible: true,
 	  histogramPadding: 4,
+	  padding: 20,
 	  width: 400,
 	  height: 200,
 	  style: {
@@ -22904,6 +22903,7 @@
 	      var max = _bucket.max;
 
 	      var bucketWidth = this.props.innerWidth / buckets.length;
+	      var selection = this.props.selection;
 
 	      return _react2['default'].createElement(
 	        'div',
@@ -22918,8 +22918,6 @@
 	              'g',
 	              { transform: 'scale(1,-1)' },
 	              buckets.map(function (bucket, i) {
-	                var selection = _this.props.selection;
-	                var coverage = [Math.abs(bucket.start - selection[0]), Math.abs(bucket.end - selection[1])];
 	                var opacity = 0;
 
 	                if (selection[0] > bucket.end || selection[1] < bucket.start) {
@@ -22972,13 +22970,18 @@
 
 	Histogram.propTypes = {
 	  data: _react.PropTypes.arrayOf(_react.PropTypes.number).isRequired,
+	  selection: _react.PropTypes.arrayOf(_react.PropTypes.number).isRequired,
 	  start: _react.PropTypes.number,
 	  end: _react.PropTypes.number,
 	  bucketSize: _react.PropTypes.number,
 	  width: _react.PropTypes.number,
+	  innerWidth: _react.PropTypes.number,
+	  height: _react.PropTypes.number,
 	  padding: _react.PropTypes.number,
+	  selectionColor: _react.PropTypes.string,
 	  histogramPadding: _react.PropTypes.number,
-	  height: _react.PropTypes.number
+	  reset: _react.PropTypes.func,
+	  onChange: _react.PropTypes.func
 	};
 
 	Histogram.defaultProps = {
@@ -23011,10 +23014,6 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
-
-	var _d3Arrays = __webpack_require__(159);
-
-	var _d3Arrays2 = _interopRequireDefault(_d3Arrays);
 
 	var _d3Format = __webpack_require__(163);
 
@@ -23115,7 +23114,6 @@
 	      var _this = this;
 
 	      var selection = this.props.selection;
-	      var innerHeight = this.props.height - this.props.padding;
 	      var selectionWidth = Math.abs(this.props.scale(selection[1]) - this.props.scale(selection[0]));
 
 	      return _react2['default'].createElement(
@@ -23187,13 +23185,19 @@
 
 	Slider.propTypes = {
 	  data: _react.PropTypes.arrayOf(_react.PropTypes.number).isRequired,
+	  selection: _react.PropTypes.arrayOf(_react.PropTypes.number).isRequired,
+	  selectionSorted: _react.PropTypes.arrayOf(_react.PropTypes.number).isRequired,
 	  start: _react.PropTypes.number,
 	  end: _react.PropTypes.number,
 	  height: _react.PropTypes.number,
 	  width: _react.PropTypes.number,
+	  padding: _react.PropTypes.number,
 	  bucketSize: _react.PropTypes.number,
-	  selection: _react.PropTypes.arrayOf(_react.PropTypes.number).isRequired,
-	  histogramPadding: _react.PropTypes.number
+	  selectionColor: _react.PropTypes.string,
+	  histogramPadding: _react.PropTypes.number,
+	  scale: _react.PropTypes.func,
+	  reset: _react.PropTypes.func,
+	  onChange: _react.PropTypes.func
 	};
 	module.exports = exports['default'];
 
